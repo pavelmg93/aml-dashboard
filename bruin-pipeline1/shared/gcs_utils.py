@@ -35,13 +35,13 @@ def process_and_upload_patterns(bucket, input_path, output_path):
         "Payment_Currency",
         "Payment_Format",
         "Is_Laundering",
-        "attack_id",
+        "attack_n",
         "pattern_name",
         "attack_details"
     ]
     writer.writerow(header)
 
-    attack_id = 0
+    attack_n = 0
     in_attack_block = False
     pattern_name = ""
     attack_details = ""
@@ -57,7 +57,7 @@ def process_and_upload_patterns(bucket, input_path, output_path):
             # Detect Start of Block
             if line.startswith("BEGIN LAUNDERING ATTEMPT"):
                 in_attack_block = True
-                attack_id += 1
+                attack_n += 1
                 
                 # 1. Safely split by the first dash
                 parts = line.split('-', 1)
@@ -83,7 +83,7 @@ def process_and_upload_patterns(bucket, input_path, output_path):
             if in_attack_block:
                 raw_fields = line.split(',')
                 # Append metadata to the transaction fields
-                row = raw_fields + [attack_id, pattern_name, attack_details]
+                row = raw_fields + [attack_n, pattern_name, attack_details]
                 writer.writerow(row)
 
     output_blob.upload_from_string(output_buffer.getvalue(), content_type='text/csv')

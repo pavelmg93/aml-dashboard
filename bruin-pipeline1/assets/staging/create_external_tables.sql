@@ -3,12 +3,11 @@ name: create_external_tables
 type: bq.sql
 connection: gcp_conn
 depends:
-  - ingest_kaggle_small
   - convert_patterns_to_csv
 @bruin */
 
 -- 1. High-Risk (HI) Small Transactions
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_trans`
+CREATE OR REPLACE EXTERNAL TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_trans`
 OPTIONS (
   format = 'CSV',
   uris = ['gs://{{ var.GCP_BUCKET }}/raw/ibm_aml/HI-Small_Trans.csv'],
@@ -16,7 +15,7 @@ OPTIONS (
 );
 
 -- 2. High-Risk (HI) Small Accounts
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_accounts`
+CREATE OR REPLACE EXTERNAL TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_accounts`
 OPTIONS (
   format = 'CSV',
   uris = ['gs://{{ var.GCP_BUCKET }}/raw/ibm_aml/HI-Small_accounts.csv'],
@@ -24,7 +23,7 @@ OPTIONS (
 );
 
 -- 3. Low-Risk (LI) Small Transactions
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_trans`
+CREATE OR REPLACE EXTERNAL TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_trans`
 OPTIONS (
   format = 'CSV',
   uris = ['gs://{{ var.GCP_BUCKET }}/raw/ibm_aml/LI-Small_Trans.csv'],
@@ -32,7 +31,7 @@ OPTIONS (
 );
 
 -- 4. Low-Risk (LI) Small Accounts
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_accounts`
+CREATE OR REPLACE EXTERNAL TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_accounts`
 OPTIONS (
   format = 'CSV',
   uris = ['gs://{{ var.GCP_BUCKET }}/raw/ibm_aml/LI-Small_accounts.csv'],
@@ -40,7 +39,7 @@ OPTIONS (
 );
 
 -- 5. HI Flattened AML Patterns
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_patterns`
+CREATE OR REPLACE EXTERNAL TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_patterns`
 (
     Timestamp STRING,
     From_Bank STRING,
@@ -53,7 +52,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET 
     Payment_Currency STRING,
     Payment_Format STRING,
     Is_Laundering INT64,
-    attack_id INT64,
+    attack_n INT64,
     pattern_name STRING,
     attack_details STRING
 )
@@ -65,7 +64,7 @@ OPTIONS (
 );
 
 -- 6. LI Flattened AML Patterns
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_patterns`
+CREATE OR REPLACE EXTERNAL TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_patterns`
 
 (
     Timestamp STRING,
@@ -79,7 +78,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET 
     Payment_Currency STRING,
     Payment_Format STRING,
     Is_Laundering INT64,
-    attack_id INT64,
+    attack_n INT64,
     pattern_name STRING,
     attack_details STRING
 )
