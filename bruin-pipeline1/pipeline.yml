@@ -1,0 +1,21 @@
+name: bruin-init
+schedule: daily
+start_date: "2026-03-31"
+catchup: false
+
+default_connections:
+  google_cloud_platform: "gcp_conn"
+
+variables:
+  GCP_PROJECT_ID:
+    type: string
+    default: "aml-dashboard-491905"
+  BQ_DATASET:
+    type: string
+    default: "aml_dashboard_pmg_dataset"
+  GCP_BUCKET:
+    type: string
+    default: "aml_dashboard_pmg_bucket"
+  datasete_size:
+      type: string
+      default: "Small" # Options: Small, Medium, Large, can ovverride with --var dataset_size=Medium
