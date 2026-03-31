@@ -23,15 +23,13 @@ hashed_trans AS (
         FARM_FINGERPRINT(
             TO_JSON_STRING(
                 STRUCT(
-                    -- Convert TIMESTAMP to "YYYY-MM-DD HH:MM"
-                    FORMAT_TIMESTAMP('%Y-%m-%d %H:%M', Timestamp) AS ts, 
-                    -- Pad the INTEGER Bank IDs to 6-digit strings
-                    LPAD(CAST(From_Bank AS STRING), 6, '0') AS fb, 
-                    CAST(Account AS STRING) AS acc, 
-                    LPAD(CAST(To_Bank AS STRING), 6, '0') AS tb, 
-                    CAST(Account_4 AS STRING) AS acc4, 
-                    -- Round the FLOAT to match the CSV
-                    CAST(ROUND(Amount_Received, 2) AS STRING) AS amt
+                    -- Use FORMAT_TIMESTAMP to match the "YYYY-MM-DD HH:MM" format
+                    FORMAT_TIMESTAMP('%Y-%m-%d %H:%M', Timestamp) AS ts,
+                    LPAD(TRIM(CAST(From_Bank AS STRING)), 6, '0') AS fb,
+                    TRIM(CAST(Account AS STRING)) AS acc,
+                    LPAD(TRIM(CAST(To_Bank AS STRING)), 6, '0') AS tb,
+                    TRIM(CAST(Account_4 AS STRING)) AS acc4,
+                    FORMAT('%.2f', ROUND(Amount_Received, 2)) AS amt
                 )
             )
         ) AS transaction_id,
