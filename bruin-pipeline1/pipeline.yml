@@ -16,6 +16,6 @@ variables:
   GCP_BUCKET:
     type: string
     default: "aml_dashboard_pmg_bucket"
-  datasete_size:
+  dataset_size:
       type: string
-      default: "Small" # Options: Small, Medium, Large, can ovverride with --var dataset_size=Medium
+      default: "small" # Options: Small, Medium, Large, can ovverride with --var dataset_size=Medium

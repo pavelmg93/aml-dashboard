@@ -3,50 +3,41 @@ name: stg_transactions
 type: bq.sql
 depends:
   - create_external_tables
+  - stg_patterns
 @bruin */
 
-CREATE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE | lower }}_trans` AS
--- Union HI and LI transactions for the current dataset size
-WITH
-    hi_trans AS (
-        SELECT *, 'HI' as risk_type, '{{ var.DATASET_SIZE }}' as dataset_size
-        FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.DATASET_SIZE | lower }}_trans`
+CREATE TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.dataset_size | lower }}_trans` AS
+WITH raw_trans AS (
+    SELECT *, 'HI' as risk_type, '{{ var.dataset_size }}' as dataset_size
+    FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_trans`
+    UNION ALL
+    SELECT *, 'LI' as risk_type, '{{ var.dataset_size }}' as dataset_size
+    FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_trans`
 ),
-    li_trans AS (
-        SELECT *, 'LI' as risk_type, '{{ var.DATASET_SIZE }}' as dataset_size
-        FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.DATASET_SIZE | lower }}_trans`
+hashed_trans AS (
+    SELECT 
+        -- Generate a unique ID by hashing the core transaction attributes
+        FARM_FINGERPRINT(
+            TO_JSON_STRING(
+                STRUCT(
+                    Timestamp, 
+                    From_Bank, 
+                    Account, 
+                    To_Bank, 
+                    Account_4, 
+                    Amount_Received
+                )
+            )
+        ) AS transaction_id,
+        *
+    FROM raw_trans
 )
 
 SELECT 
-    -- Generate a unique ID by hashing the core transaction attributes
-    FARM_FINGERPRINT(
-        TO_JSON_STRING(
-            STRUCT(
-                Timestamp, 
-                From_Bank, 
-                Account, 
-                To_Bank, 
-                Account_4, 
-                Amount_Received
-            )
-        )
-    ) AS transaction_id,
-    *
-FROM hi_trans
-UNION ALL
-SELECT 
-    -- Generate a unique ID by hashing the core transaction attributes
-    FARM_FINGERPRINT(
-        TO_JSON_STRING(
-            STRUCT(
-                Timestamp, 
-                From_Bank, 
-                Account, 
-                To_Bank, 
-                Account_4, 
-                Amount_Received
-            )
-        )
-    ) AS transaction_id,
-    *
-FROM li_trans;
+    t.* EXCEPT(attack_id, pattern_name, attack_details),
+    -- Link to the unique attack instance
+    p.attack_instance_id AS attack_id
+FROM hashed_trans t
+LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.dataset_size | lower }}_patterns` p
+  ON t.transaction_id = p.transaction_id 
+  AND t.risk_type = p.risk_type;

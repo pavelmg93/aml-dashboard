@@ -8,7 +8,7 @@ depends:
 @bruin */
 
 -- 1. High-Risk (HI) Small Transactions
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_small_trans`
+CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_trans`
 OPTIONS (
   format = 'CSV',
   uris = ['gs://{{ var.GCP_BUCKET }}/raw/ibm_aml/HI-Small_Trans.csv'],
@@ -16,7 +16,7 @@ OPTIONS (
 );
 
 -- 2. High-Risk (HI) Small Accounts
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_small_accounts`
+CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_accounts`
 OPTIONS (
   format = 'CSV',
   uris = ['gs://{{ var.GCP_BUCKET }}/raw/ibm_aml/HI-Small_accounts.csv'],
@@ -24,7 +24,7 @@ OPTIONS (
 );
 
 -- 3. Low-Risk (LI) Small Transactions
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_small_trans`
+CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_trans`
 OPTIONS (
   format = 'CSV',
   uris = ['gs://{{ var.GCP_BUCKET }}/raw/ibm_aml/LI-Small_Trans.csv'],
@@ -32,15 +32,15 @@ OPTIONS (
 );
 
 -- 4. Low-Risk (LI) Small Accounts
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_small_accounts`
+CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_accounts`
 OPTIONS (
   format = 'CSV',
   uris = ['gs://{{ var.GCP_BUCKET }}/raw/ibm_aml/LI-Small_accounts.csv'],
   skip_leading_rows = 1
 );
 
--- 5. Flattened AML Patterns (Staged from Python)
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_aml_patterns`
+-- 5. HI Flattened AML Patterns
+CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.dataset_size | lower }}_patterns`
 (
     Timestamp STRING,
     From_Bank STRING,
@@ -59,12 +59,14 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET 
 )
 OPTIONS (
   format = 'CSV',
-  uris = ['gs://{{ var.GCP_BUCKET }}/processed/ibm-aml/LI_Small_patterns_flat.csv'],
+  -- Use lower to match the processed filename from Python
+  uris = ['gs://{{ var.GCP_BUCKET }}/processed/ibm-aml/HI_{{ var.dataset_size | lower }}_patterns_flat.csv'],
   skip_leading_rows = 1
 );
 
 -- 6. LI Flattened AML Patterns
-CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_small_patterns`
+CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.dataset_size | lower }}_patterns`
+
 (
     Timestamp STRING,
     From_Bank STRING,
@@ -82,5 +84,8 @@ CREATE EXTERNAL TABLE IF NOT EXISTS `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET 
     attack_details STRING
 )
 OPTIONS (
-  format = 'CSV', uris = ['gs://{{ var.GCP_BUCKET }}/processed/ibm-aml/LI_Small_patterns_flat.csv'], skip_leading_rows = 1
+  format = 'CSV',
+  -- Use lower to match the processed filename from Python
+  uris = ['gs://{{ var.GCP_BUCKET }}/processed/ibm-aml/LI_{{ var.dataset_size | lower }}_patterns_flat.csv'],
+  skip_leading_rows = 1
 );
