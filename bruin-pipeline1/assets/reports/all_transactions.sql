@@ -1,10 +1,10 @@
 /* @bruin
-name: all_transactions
+name: aml_dashboard_pmg_dataset.all_transactions
 type: bq.sql
 depends:
-  - stg_transactions
-  - stg_attacks
-  - ref_attack_patterns
+  - aml_dashboard_pmg_dataset.stg_small_trans
+  - aml_dashboard_pmg_dataset.stg_small_attacks
+  - aml_dashboard_pmg_dataset.ref_small_attack_patterns
 @bruin */
 
 -- This view joins the normalized tables to create the final Dashboard source
@@ -33,8 +33,8 @@ SELECT
         WHEN t.Is_Laundering = 1 THEN 'High Alert'
         ELSE 'Normal'
     END as status
-FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.dataset_size | lower }}_trans` t
-LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_attacks` a
+FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE | lower }}_trans` t
+LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE }}_attacks` a
   ON t.attack_id = a.attack_id
-LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ref_attack_patterns` p
+LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ref_{{ var.DATASET_SIZE }}_attack_patterns` p
   ON a.pattern_name = p.pattern_name;

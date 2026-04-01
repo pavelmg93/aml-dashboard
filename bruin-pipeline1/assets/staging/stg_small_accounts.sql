@@ -1,17 +1,31 @@
 /* @bruin
-name: stg_accounts
+name: aml_dashboard_pmg_dataset.stg_small_accounts
 type: bq.sql
 depends:
-  - stg_attacks
-  - stg_transactions
+  - aml_dashboard_pmg_dataset.stg_small_attacks
+  - aml_dashboard_pmg_dataset.stg_small_trans
+columns:
+  - name: Account_Number
+    type: string
+    checks:
+      - name: not_null
+  - name: used_in_attacks
+    type: integer
+    description: "Total number of distinct attacks this account was involved in"
+    checks:
+      - name: non_negative
+  - name: total_transactions
+    type: integer
+    checks:
+      - name: non_negative
 @bruin */
 
-CREATE OR REPLACE TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_accounts` AS
+CREATE OR REPLACE TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE }}_accounts` AS
 WITH account_base AS (
     -- Union HI and LI accounts to get the master list
-    SELECT *, 'HI' as risk_profile FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_small_accounts`
+    SELECT *, 'HI' as risk_profile FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_hi_{{ var.DATASET_SIZE }}_accounts`
     UNION ALL
-    SELECT *, 'LI' as risk_profile FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_small_accounts`
+    SELECT *, 'LI' as risk_profile FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.DATASET_SIZE }}_accounts`
 ),
 
 outgoing_stats AS (
@@ -23,7 +37,7 @@ outgoing_stats AS (
         COUNT(transaction_id) as sent_count,
         COUNT(DISTINCT attack_id) as outgoing_attack_count,
         SUM(CASE WHEN Is_Laundering = 1 THEN Amount_Paid ELSE 0 END) as laundering_out_value
-    FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.dataset_size | lower }}_trans`
+    FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE | lower }}_trans`
     GROUP BY 1, 2
 ),
 
@@ -36,7 +50,7 @@ incoming_stats AS (
         COUNT(transaction_id) as received_count,
         COUNT(DISTINCT attack_id) as incoming_attack_count,
         SUM(CASE WHEN Is_Laundering = 1 THEN Amount_Received ELSE 0 END) as laundering_in_value
-    FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.dataset_size | lower }}_trans`
+    FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE | lower }}_trans`
     GROUP BY 1, 2
 )
 
@@ -57,6 +71,8 @@ SELECT
     (COALESCE(o.laundering_out_value, 0) + COALESCE(i.laundering_in_value, 0)) as total_laundering_value
 FROM account_base a
 LEFT JOIN outgoing_stats o 
-    ON a.Bank_ID = o.Bank_ID AND a.Account_Number = o.Account_Number
+    ON CAST(a.Bank_ID AS STRING) = CAST(o.Bank_ID AS STRING) 
+    AND CAST(a.Account_Number AS STRING) = CAST(o.Account_Number AS STRING)
 LEFT JOIN incoming_stats i 
-    ON a.Bank_ID = i.Bank_ID AND a.Account_Number = i.Account_Number;
+    ON CAST(a.Bank_ID AS STRING) = CAST(i.Bank_ID AS STRING) 
+    AND CAST(a.Account_Number AS STRING) = CAST(i.Account_Number AS STRING);
