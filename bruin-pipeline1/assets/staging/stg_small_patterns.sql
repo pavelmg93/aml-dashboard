@@ -37,26 +37,35 @@ WITH pattern_data AS (
         '{{ var.DATASET_SIZE }}' as dataset_size 
     FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ext_li_{{ var.DATASET_SIZE | lower }}_patterns`
 )
-SELECT 
-    -- Generate a unique ID by hashing the core transaction attributes
-    -- Robust Transaction Hash (Join Key)
-    -- This handles the STRING timestamp conversion
+SELECT
+    risk_type,
+    dataset_size,
+    -- 1. Deterministic Transaction ID (The Primary Key)
     FARM_FINGERPRINT(
-        TO_JSON_STRING(
-            STRUCT(
-                -- Use identical string manipulation to prevent zero-padding divergences
-                REPLACE(SUBSTR(TRIM(Timestamp), 1, 16), '/', '-') AS ts,
-                
-                -- Use NULLIF to collapse empty strings into NULLs, ensuring identical JSON omission
-                LPAD(NULLIF(TRIM(CAST(From_Bank AS STRING)), ''), 6, '0') AS fb,
-                NULLIF(TRIM(CAST(Account AS STRING)), '') AS acc,
-                LPAD(NULLIF(TRIM(CAST(To_Bank AS STRING)), ''), 6, '0') AS tb,
-                NULLIF(TRIM(CAST(Account_4 AS STRING)), '') AS acc4,
-                
-                FORMAT('%.2f', ROUND(Amount_Received, 2)) AS amt
-            )
+        CONCAT(
+            COALESCE(CAST(Timestamp AS STRING), ''),
+            COALESCE(CAST(CAST(From_Bank AS INT64) AS STRING), ''),
+            COALESCE(TRIM(CAST(Account AS STRING)), ''),
+            COALESCE(CAST(CAST(To_Bank AS INT64) AS STRING), ''),
+            COALESCE(TRIM(CAST(Account_4 AS STRING)), ''),
+            COALESCE(CAST(Amount_Paid AS STRING), '')
         )
     ) AS transaction_id,
+
+    -- 2. Normalized Fields
+    Timestamp,
+    CAST(CAST(From_Bank AS INT64) AS STRING) AS From_Bank,
+    TRIM(CAST(Account AS STRING)) AS Account,
+    CAST(CAST(To_Bank AS INT64) AS STRING) AS To_Bank,
+    TRIM(CAST(Account_4 AS STRING)) AS Account_4,
+    
+    -- 3. Raw Values
+    Amount_Received,
+    Receiving_Currency,
+    Amount_Paid,
+    Payment_Currency,
+    Payment_Format,
+    Is_Laundering,
 
     -- Attack Instance Hash (PK for the attack)
     -- This combines the counter with the risk/size to make it globally unique
@@ -69,5 +78,7 @@ SELECT
             )
         )
     ) AS attack_id,
-    *
+    attack_n,
+    pattern_name,
+    attack_details
 FROM pattern_data;

@@ -16,7 +16,7 @@ columns:
       - name: not_null
 @bruin */
 
-CREATE OR REPLACE TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE }}attacks` AS
+CREATE OR REPLACE TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE }}_attacks` AS
 SELECT DISTINCT
     attack_id,
     pattern_name,

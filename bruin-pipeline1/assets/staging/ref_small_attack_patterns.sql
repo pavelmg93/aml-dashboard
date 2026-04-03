@@ -12,7 +12,7 @@ columns:
       - name: unique
 @bruin */
 
-CREATE OR REPLACE TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ref_{{ var.DATASET_SIZE }}_{{ var.DATASET_SIZE }}_attack_patterns` AS
+CREATE OR REPLACE TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ref_{{ var.DATASET_SIZE }}_attack_patterns` AS
 SELECT DISTINCT
     pattern_name,
     -- This field is initialized as null for manual population later
