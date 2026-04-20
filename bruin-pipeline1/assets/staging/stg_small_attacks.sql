@@ -1,8 +1,8 @@
 /* @bruin
-name: aml_dashboard_pmg_dataset.stg_small_attacks
+name: aml_bq.stg_small_attacks
 type: bq.sql
 depends:
-  - aml_dashboard_pmg_dataset.stg_small_patterns
+  - aml_bq.stg_small_patterns
 columns:
   - name: attack_id
     type: string

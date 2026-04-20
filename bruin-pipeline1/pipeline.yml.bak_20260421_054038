@@ -17,5 +17,5 @@ variables:
     type: string
     default: "aml-pmg-bucket"
   DATASET_SIZE:
-    type: string
-    default: "small"
+      type: string
+      default: "small" # Options: Small, Medium, Large, can ovverride with --var dataset_size=Medium

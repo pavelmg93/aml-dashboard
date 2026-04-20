@@ -1,9 +1,9 @@
 /* @bruin
-name: aml_dashboard_pmg_dataset.stg_small_accounts
+name: aml_bq.stg_small_accounts
 type: bq.sql
 depends:
-  - aml_dashboard_pmg_dataset.stg_small_attacks
-  - aml_dashboard_pmg_dataset.stg_small_trans
+  - aml_bq.stg_small_attacks
+  - aml_bq.stg_small_trans
 columns:
   - name: Account_Number
     type: string

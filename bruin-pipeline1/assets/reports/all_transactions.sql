@@ -1,10 +1,10 @@
 /* @bruin
-name: aml_dashboard_pmg_dataset.all_transactions
+name: aml_bq.all_transactions
 type: bq.sql
 depends:
-  - aml_dashboard_pmg_dataset.stg_small_trans
-  - aml_dashboard_pmg_dataset.stg_small_attacks
-  - aml_dashboard_pmg_dataset.ref_small_attack_patterns
+  - aml_bq.stg_small_trans
+  - aml_bq.stg_small_attacks
+  - aml_bq.ref_small_attack_patterns
 @bruin */
 
 -- This view joins the normalized tables to create the final Dashboard source

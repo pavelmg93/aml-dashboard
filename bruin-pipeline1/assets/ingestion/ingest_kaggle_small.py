@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 # Configuration constants
 DATASET_SLUG = "ealtman2019/ibm-transactions-for-anti-money-laundering-aml"
-BUCKET_NAME = "aml_dashboard_pmg_bucket"
+BUCKET_NAME = os.environ.get("GCP_BUCKET")
 TARGET_KEYWORD = "Small"
 
 def main():

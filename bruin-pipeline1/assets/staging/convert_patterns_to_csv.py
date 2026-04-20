@@ -21,8 +21,8 @@ from shared.gcs_utils import get_gcs_bucket, process_and_upload_patterns
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-BUCKET_NAME = os.environ.get("GCP_BUCKET", "aml_dashboard_pmg_bucket")
-DATASET_SIZE = os.environ.get("dataset_size", "small")
+BUCKET_NAME = os.environ.get("GCP_BUCKET")
+DATASET_SIZE = os.environ.get("DATASET_SIZE", "small")
 
 def process_patterns():
     bucket = get_gcs_bucket(BUCKET_NAME)

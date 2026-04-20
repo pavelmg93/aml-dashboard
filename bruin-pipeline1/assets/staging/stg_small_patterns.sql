@@ -1,5 +1,5 @@
 /* @bruin
-name: aml_dashboard_pmg_dataset.stg_small_patterns
+name: aml_bq.stg_small_patterns
 type: bq.sql
 depends:
   - create_external_tables
