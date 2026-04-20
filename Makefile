@@ -4,6 +4,9 @@ ifneq ("$(wildcard .env)","")
     export
 endif
 
+# Force Make to look in the local user bin folders for freshly installed tools
+export PATH := $(HOME)/.local/bin:$(HOME)/.cargo/bin:$(PATH)
+
 .PHONY: setup venv infra pipeline clean
 
 # 1. Initial tool installation and GCP linkage
