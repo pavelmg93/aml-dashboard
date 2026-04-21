@@ -1,14 +1,14 @@
 /* @bruin
-name: reports.all_transactions
+name: aml_bq.all_transactions
 type: bq.sql
 materialization:
   type: table
   partition_by: "TIMESTAMP_TRUNC(Timestamp, MONTH)"
   cluster_by: ["Timestamp", "Account"]
 depends:
-  - staging.stg_small_trans
-  - staging.stg_small_attacks
-  - staging.ref_small_attack_patterns
+  - aml_bq.stg_small_trans
+  - aml_bq.stg_small_attacks
+  - aml_bq.ref_small_attack_patterns
 @bruin */
 
 -- Bruin handles the CREATE TABLE logic automatically. 
