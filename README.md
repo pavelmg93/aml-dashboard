@@ -9,6 +9,9 @@ I built this ETL pipeline and forensic dashboard to help Compliance Officers vis
 
 ![AML Dashboard Main View](./images/aml-pmg-dashboard.png)
 
+
+![AML Dashboard Summary](./images/dashboard-enhanced.png)
+
 ---
 
 ## The Problem
@@ -52,6 +55,8 @@ This project transforms raw synthetic financial data into a **"Walkable Graph"**
 
 A core feature of my data preparation is the automated Python parsing script. The IBM dataset provides laundering attack patterns in a complex text format. My ETL pipeline streams this raw text directly from Google Cloud Storage, parses the specific attack blocks, flattens the nested data into tabular rows, and saves it as a clean CSV ready for BigQuery external tables.
 
+---
+![AML Dashboard ETL Pipeline Visualized](./images/AML-ETL-ipiline.png)
 ---
 
 ## The Tech Stack
