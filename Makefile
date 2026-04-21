@@ -43,9 +43,23 @@ pipeline:
 	@echo "[v] Pipeline execution complete!"
 
 dashboard:
-	@echo "[/] Launching AML Dashboard..."
-	@echo "Live Dashboard Link:"
-	@echo "https://datastudio.google.com/u/1/reporting/78f521cd-3007-4151-9cd3-fe4a107d4e8c/page/VdnvF"
+	@echo ""
+	@echo "============================================================"
+	@echo "           AML DASHBOARD SETUP INSTRUCTIONS             "
+	@echo "============================================================"
+	@echo "[/] 1. OPEN TEMPLATE:"
+	@echo "    https://datastudio.google.com/reporting/78f521cd-3007-4151-9cd3-fe4a107d4e8c/page/VdnvF"
+	@echo ""
+	@echo "[/] 2. COPY THE REPORT:"
+	@echo "    Click the (⋮) menu in the top right -> Select 'Make a copy'."
+	@echo ""
+	@echo "[/] 3. CONNECT YOUR BIGQUERY DATA:"
+	@echo "    In the 'New Data Source' dropdown, select 'Create data source'."
+	@echo "    Choose 'BigQuery' -> Select your Project -> $(BQ_DATASET) -> 'all_transactions'."
+	@echo "    Click 'Connect' -> 'Add to Report' -> 'Copy Report'."
+	@echo "============================================================"
+	@echo "[v] Dashboard is now wired to your specific GCP environment."
+	@echo "[>] Run 'make clean' to delete data and destroy infrastructure."
 
 clean:
 	@echo "[!] Destroying GCP Infrastructure..."
@@ -81,8 +95,11 @@ dc-pipeline:
 	docker compose exec aml-runner make pipeline
 
 dc-dashboard:
-	@echo "[/] Fetching Dashboard link..."
-	docker compose exec aml-client make dashboard
+	@echo "[/] Fetching Dashboard instructions from client..."
+	@docker compose exec aml-client make dashboard
+	@echo ""
+	@echo "[>] Run 'make dc-down' to stop containers."
+	@echo "[>] Run 'make dc-clean' for a full purge of Docker and infra."
 
 # The Ultimate Command
 dc-go:
