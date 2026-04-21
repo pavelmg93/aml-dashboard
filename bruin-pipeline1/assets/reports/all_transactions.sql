@@ -14,7 +14,7 @@ depends:
 -- Bruin handles the CREATE TABLE logic automatically. 
 -- Just provide the SELECT statement.
 SELECT 
-    t.Timestamp,
+    CAST(t.Timestamp AS TIMESTAMP) AS Timestamp,
     t.From_Bank,
     t.Account,
     t.To_Bank,
