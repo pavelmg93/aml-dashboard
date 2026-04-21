@@ -1,9 +1,9 @@
 /* @bruin
-name: stg_small_accounts
+name: DTST.stg_small_accounts
 type: bq.sql
 depends:
-  - stg_small_attacks
-  - stg_small_trans
+  - DTST.stg_small_attacks
+  - DTST.stg_small_trans
 columns:
   - name: Account_Number
     type: string

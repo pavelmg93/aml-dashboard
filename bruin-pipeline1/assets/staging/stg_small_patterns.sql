@@ -1,5 +1,5 @@
 /* @bruin
-name: stg_small_patterns
+name: DTST.stg_small_patterns
 type: bq.sql
 depends:
   - create_external_tables

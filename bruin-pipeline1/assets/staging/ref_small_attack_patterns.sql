@@ -1,8 +1,8 @@
 /* @bruin
-name: ref_small_attack_patterns
+name: DTST.ref_small_attack_patterns
 type: bq.sql
 depends:
-  - stg_small_attacks
+  - DTST.stg_small_attacks
 columns:
   - name: pattern_name
     type: string

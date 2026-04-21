@@ -1,14 +1,14 @@
 /* @bruin
-name: all_transactions
+name: DTST.all_transactions
 type: bq.sql
 materialization:
   type: table
   partition_by: "TIMESTAMP_TRUNC(transaction_timestamp, MONTH)"
   cluster_by: ["transaction_timestamp", "Account"]
 depends:
-  - stg_small_trans
-  - stg_small_attacks
-  - ref_small_attack_patterns
+  - DTST.stg_small_trans
+  - DTST.stg_small_attacks
+  - DTST.ref_small_attack_patterns
 @bruin */
 
 -- Bruin handles the CREATE TABLE logic automatically. 
