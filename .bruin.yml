@@ -1,0 +1,23 @@
+version: "1.0"
+name: aml-dashboard
+
+default_environment: dev
+
+environments:
+  dev:
+    connections:
+      google_cloud_platform:
+        - name: gcp_conn
+          service_account_file: ${BRUIN_GCP_KEY}
+          project_id: ${GCP_PROJECT_ID}
+          dataset: ${BQ_DATASET}
+          bucket: ${GCP_BUCKET}
+
+  prod:
+    connections:
+      google_cloud_platform:
+        - name: gcp_conn
+          service_account_file: ${BRUIN_GCP_KEY}
+          project_id: ${GCP_PROJECT_ID}
+          dataset: ${BQ_DATASET}
+          bucket: ${GCP_BUCKET}  
