@@ -1,5 +1,5 @@
 /* @bruin
-name: aml_bq.stg_small_patterns
+name: stg_small_patterns
 type: bq.sql
 depends:
   - create_external_tables

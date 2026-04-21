@@ -1,9 +1,9 @@
 /* @bruin
-name: aml_bq.stg_small_trans
+name: stg_small_trans
 type: bq.sql
 depends:
   - create_external_tables
-  - aml_bq.stg_small_patterns
+  - stg_small_patterns
 columns:
   - name: transaction_id
     type: string

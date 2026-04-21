@@ -1,9 +1,9 @@
 /* @bruin
-name: aml_bq.stg_small_accounts
+name: stg_small_accounts
 type: bq.sql
 depends:
-  - aml_bq.stg_small_attacks
-  - aml_bq.stg_small_trans
+  - stg_small_attacks
+  - stg_small_trans
 columns:
   - name: Account_Number
     type: string

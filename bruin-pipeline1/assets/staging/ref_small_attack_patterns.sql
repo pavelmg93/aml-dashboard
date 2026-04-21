@@ -1,8 +1,8 @@
 /* @bruin
-name: aml_bq.ref_small_attack_patterns
+name: ref_small_attack_patterns
 type: bq.sql
 depends:
-  - aml_bq.stg_small_attacks
+  - stg_small_attacks
 columns:
   - name: pattern_name
     type: string

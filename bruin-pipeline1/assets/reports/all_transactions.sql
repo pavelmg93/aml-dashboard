@@ -1,20 +1,20 @@
 /* @bruin
-name: aml_bq.all_transactions
+name: all_transactions
 type: bq.sql
 materialization:
   type: table
-  partition_by: "TIMESTAMP_TRUNC(Timestamp, MONTH)"
-  cluster_by: ["Timestamp", "Account"]
+  partition_by: "TIMESTAMP_TRUNC(transaction_timestamp, MONTH)"
+  cluster_by: ["transaction_timestamp", "Account"]
 depends:
-  - aml_bq.stg_small_trans
-  - aml_bq.stg_small_attacks
-  - aml_bq.ref_small_attack_patterns
+  - stg_small_trans
+  - stg_small_attacks
+  - ref_small_attack_patterns
 @bruin */
 
 -- Bruin handles the CREATE TABLE logic automatically. 
 -- Just provide the SELECT statement.
 SELECT 
-    CAST(t.Timestamp AS TIMESTAMP) AS Timestamp,
+    CAST(t.Timestamp AS TIMESTAMP) AS transaction_Timestamp,
     t.From_Bank,
     t.Account,
     t.To_Bank,
