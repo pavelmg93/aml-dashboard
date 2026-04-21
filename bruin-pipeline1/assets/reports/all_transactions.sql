@@ -1,7 +1,6 @@
 /* @bruin
 name: Reports.all_transactions
 type: bq.sql
-materialization: table
 depends:
   - Staging.stg_small_trans
   - Staging.stg_small_attacks
