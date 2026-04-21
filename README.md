@@ -245,15 +245,31 @@ My ETL identifies 8 distinct criminal typologies:
 
 ### Docker Compose Flow (Daisy-Chain)
 The `dc-go` command is the recommended interactive way to walk through the ETL. I built this to automate the sequence.
+Ensure you have your Google Cloud Service Account key in the `keys/` folder and your Kaggle API credentials ready.
 
 | Command | Description |
 | :--- | :--- |
+| make dc-go | Chained command: Starts services and executes setup, infra, and ETL pipeline. |
 | make dc-build | Builds the Runner and Client images. |
 | make dc-setup | Interactive configuration of GCP and Kaggle credentials inside Docker. |
-| make dc-go | Chained command: Starts services and executes setup, infra, and ETL pipeline. |
 | make dc-dashboard | Fetches the live dashboard URL from the Client container. |
 | make dc-down | Stops services and cleans up local Docker volumes. |
 | make dc-clean | Deep clean: Purges Docker artifacts and destroys cloud resources. |
+
+---
+
+## Local Development Guide
+
+If you prefer to run the pipeline directly on your host machine rather than via Docker, follow this sequence.
+Ensure you have your Google Cloud Service Account key in the `keys/` folder and your Kaggle API credentials ready.
+
+| Command | Description |
+| :--- | :--- |
+| make setup | This interactive command installs the necessary tools (uv, Terraform, Bruin), creates your `.env` file, and sets up Python. |
+| make infra | Deploy the required Google Cloud Storage buckets and BigQuery datasets using Terraform.
+| make pipeline | Run the full ETL process (Ingestion -> Staging -> Reports) using the Bruin orchestrator.
+| make dashboard | Fetch the Looker Studio template link and follow the instructions to connect it to your BQ dataset. |
+| make clean | To avoid ongoing cloud costs, destroy all provisioned GCP resources when finished. |
 
 ---
 
