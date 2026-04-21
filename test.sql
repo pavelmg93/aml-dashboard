@@ -1,6 +1,6 @@
 /* @bruin
 
-name: staging.test
+name: stagingtest
 type: bq.sql
 materialization:
   type: view

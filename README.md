@@ -31,7 +31,7 @@ I selected this stack to satisfy the requirements of a production-grade cloud da
 * **Isolation: Docker Compose**
     I containerized the entire environment using Docker to ensure the ETL pipeline is fully portable and reproducible. I implemented a persistent architecture with a dedicated Runner and a Client container.
 * **Workflow Orchestration: Bruin**
-    Bruin is the brain of the ETL pipeline. I use it to manage dependencies between my Python ingestion scripts, SQL staging transformations, and final **Reports** materializations. It ensures that data flows in the correct order: Ingestion -> Staging -> Reports.
+    Bruin is the brain of the ETL pipeline. I use it to manage dependencies between my Python ingestion scripts, SQL staging transformations, and final **reports** materializations. It ensures that data flows in the correct order: ingestion -> Staging -> reports.
     It helps me run basic data tests and enforce schema.
 * **Visualization: Looker Studio (formerly Data Studio)**
     I chose Looker Studio to provide a real-time interface for Compliance Officers. I have implemented forensic charts to satisfy requirements: a network flow visualization and a high-risk transaction ledger. These connect directly to my partitioned BigQuery tables.
@@ -86,7 +86,7 @@ The IBM dataset presents a unique challenge: while transactions are provided as 
 Since the dataset lacks a native `transaction_id`, I engineered a deterministic 64-bit integer hash to act as the primary key. This hash is the **only way** to perform the complex JOIN logic required to link the primary transaction ledger with the parsed attack patterns and typology descriptions.
 
 ```sql
--- Deterministic Hashing Snippet from Staging.stg_small_trans
+-- Deterministic Hashing Snippet from staging.stg_small_trans
         FARM_FINGERPRINT(
             CONCAT(
                 COALESCE(CAST(Timestamp AS STRING), ''),
@@ -100,10 +100,10 @@ Since the dataset lacks a native `transaction_id`, I engineered a deterministic 
 ```
 
 ### Performance Engineering
-To optimize the Looker Studio experience, I materialized the **Reports** layer as physical tables rather than views. I use **Partitioning** (by month) and **Clustering** (the presort feature) to group transaction nodes together, ensuring that an investigator searching for a specific account's history finds those records stored in adjacent blocks.
+To optimize the Looker Studio experience, I materialized the **reports** layer as physical tables rather than views. I use **Partitioning** (by month) and **Clustering** (the presort feature) to group transaction nodes together, ensuring that an investigator searching for a specific account's history finds those records stored in adjacent blocks.
 
 ```sql
--- Snippet from Reports.all_transactions highlighting the JOIN and Matching
+-- Snippet from reports.all_transactions highlighting the JOIN and Matching
 CREATE OR REPLACE TABLE `project.dataset.all_transactions`
 PARTITION BY TIMESTAMP_TRUNC(Timestamp, MONTH)
 CLUSTER BY Timestamp, Account
@@ -112,10 +112,10 @@ SELECT
     t.*,
     a.pattern_name,
     p.pattern_description
-FROM Staging.stg_small_trans t
-LEFT JOIN Staging.stg_small_attacks a 
+FROM staging.stg_small_trans t
+LEFT JOIN staging.stg_small_attacks a 
   ON t.transaction_id = a.transaction_id  -- Matching based on engineered ID
-LEFT JOIN Staging.ref_small_attack_patterns p 
+LEFT JOIN staging.ref_small_attack_patterns p 
   ON a.pattern_name = p.pattern_name;
 ```
 
@@ -179,7 +179,7 @@ The `dc-go` command is the recommended interactive way to walk through the ETL. 
 │   │   │   ├── stg_small_patterns.sql     # Staged raw attack patterns
 │   │   │   └── stg_small_trans.sql        # Trans cleaning, deduplication & Hashing
 │   │   └── reports
-│   │       └── all_transactions.sql      # Reports Layer (Partitioned/Clustered Table)
+│   │       └── all_transactions.sql      # reports Layer (Partitioned/Clustered Table)
 ├── images
 │   └── aml-pmg-dashboard.png      # Dashboard visual
 ├── keys
