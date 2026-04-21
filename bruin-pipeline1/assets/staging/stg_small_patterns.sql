@@ -53,7 +53,7 @@ SELECT
     ) AS transaction_id,
 
     -- 2. Normalized Fields
-    Timestamp,
+    SAFE.PARSE_TIMESTAMP('%Y/%m/%d %H:%M', Timestamp) AS Timestamp,
     CAST(CAST(From_Bank AS INT64) AS STRING) AS From_Bank,
     TRIM(CAST(Account AS STRING)) AS Account,
     CAST(CAST(To_Bank AS INT64) AS STRING) AS To_Bank,

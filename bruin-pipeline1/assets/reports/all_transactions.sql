@@ -11,10 +11,8 @@ depends:
   - DTST.ref_small_attack_patterns
 @bruin */
 
--- Bruin handles the CREATE TABLE logic automatically. 
--- Just provide the SELECT statement.
 SELECT 
-    CAST(t.Timestamp AS TIMESTAMP) AS transaction_Timestamp,
+    t.Timestamp AS transaction_timestamp, -- Clean reference to the already-parsed timestamp
     t.From_Bank,
     t.Account,
     t.To_Bank,
