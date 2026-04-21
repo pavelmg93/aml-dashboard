@@ -8,6 +8,7 @@ depends:
 @bruin */
 
 -- This view joins the normalized tables to create the final Dashboard source
+CREATE OR REPLACE VIEW `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.all_transactions` AS
 SELECT 
     t.Timestamp,
     t.From_Bank,

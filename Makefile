@@ -40,3 +40,10 @@ clean:
 	@echo "[!] Destroying GCP Infrastructure..."
 	cd terraform && terraform destroy -auto-approve
 	@echo "[v] Infrastructure destroyed."
+
+# 6. View the Dashboard
+dashboard:
+	@echo "[/] Launching AML Dashboard..."
+	@echo "Live Dashboard Link:"
+	@echo "https://datastudio.google.com/reporting/78f521cd-3007-4151-9cd3-fe4a107d4e8c/page/VdnvF"
+	@echo "Hold Cmd/Ctrl and click the link above to view the dashboard."
