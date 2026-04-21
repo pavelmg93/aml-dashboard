@@ -167,20 +167,9 @@ echo "[v] bruin-pipeline1/pipeline.yml updated!"
 
 echo "[/] Hardcoding dataset names into Bruin headers for validation..."
 
-# Define the files to exclude from the renaming process
-EXCLUSIONS="\( -name create_external_tables.sql -o -name convert_patterns_to_csv.py -o -name ingest_kaggle_small.py \)"
-
-# 1. Prepend dataset to the top-level 'name:' field only (anchored to start of line)
-find bruin-pipeline1/assets -name "*.sql" -not $EXCLUSIONS -exec sed -i "s/^name: /name: $DATASET./g" {} +
-
-# 2. Prepend dataset to 'depends:' items
-find bruin-pipeline1/assets -name "*.sql" -not $EXCLUSIONS -exec sed -i "s/- /- $DATASET./g" {} +
-
-# 3. CRITICAL CLEANUP: Revert mangling of 'name:' inside columns/checks
-# This fixes the "did not find expected key" YAML error
-find bruin-pipeline1/assets -name "*.sql" -not $EXCLUSIONS -exec sed -i "s/- $DATASET.name:/- name:/g" {} +
-
-# 4. Remove any double-prepends
-find bruin-pipeline1/assets -name "*.sql" -not $EXCLUSIONS -exec sed -i "s/$DATASET\.$DATASET\./$DATASET\./g" {} +
+# This one-liner replaces the placeholder DTST. with your actual dataset name.
+# It only affects assets where you manually added DTST.
+# Assets like ingest_kaggle_small or create_external_tables will remain untouched.
+find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/DTST./$DATASET./g" {} +
 
 echo "[v] Bruin headers synchronized with BigQuery!"
