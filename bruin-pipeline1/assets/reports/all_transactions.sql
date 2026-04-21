@@ -28,6 +28,7 @@ SELECT
     t.transaction_id,
     t.risk_type,
     t.dataset_size,
+    a.attack_id,
     a.pattern_name,
     a.attack_details,
     p.pattern_description,
@@ -37,6 +38,6 @@ SELECT
     END as status
 FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE | lower }}_trans` t
 LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE | lower }}_attacks` a
-  ON t.transaction_id = a.transaction_id
+  ON t.attack_id = a.attack_id
 LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ref_{{ var.DATASET_SIZE | lower }}_attack_patterns` p
   ON a.pattern_name = p.pattern_name
