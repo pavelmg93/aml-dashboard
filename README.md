@@ -3,7 +3,7 @@
 I built this ETL pipeline and forensic dashboard to help Compliance Officers visualize illicit money flows using the IBM AML synthetic dataset.
 
 ### Live Dashboard Template
-[**View the AML Dashboard in Looker Studio**](https://datastudio.google.com/reporting/78f521cd-3007-4151-9cd3-fe4a107d4e8c/page/VdnvF)
+[**View the AML Dashboard in Looker Studio**](https://datastudio.google.com/u/1/reporting/78f521cd-3007-4151-9cd3-fe4a107d4e8c/page/VdnvF)
 
 **Note on Dashboard Usage:** To use this dashboard with your own data, a Google Account with Google Cloud and BigQuery enabled is required. The link above serves as a template; once you execute the ETL pipeline, this link can be transformed into your custom dashboard URL, specifically visualizing the data hosted in your personal BigQuery environment.
 
