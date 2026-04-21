@@ -168,9 +168,9 @@ echo "[v] bruin-pipeline1/pipeline.yml updated!"
 echo "[/] Hardcoding dataset names into Bruin headers for validation..."
 
 # Prepend the dataset name to 'name:' and 'depends:' fields
-# This uses $DATASET to match the variable used in your pipeline.yml
+# Removed the extra space before the dash in the replacement string
 find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/name: /name: $DATASET./g" {} +
-find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/- / - $DATASET./g" {} +
+find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/- /- $DATASET./g" {} +
 
 # Clean up any double-prepends if script is run multiple times
 find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/$DATASET\.$DATASET\./$DATASET\./g" {} +
