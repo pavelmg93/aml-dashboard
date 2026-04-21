@@ -1,0 +1,29 @@
+services:
+  # The Engine: Persistent runner for infra and pipelines
+  aml-runner:
+    build: .
+    image: aml-dashboard-runner
+    container_name: aml_runner
+    volumes:
+      - .:/app
+      - ./keys:/app/keys
+    # Use environment variables from host .env
+    env_file:
+      - .env
+    command: tail -f /dev/null
+    tty: true
+    stdin_open: true
+
+  # The Client: Persistent client for dashboard and audits
+  aml-client:
+    image: aml-dashboard-runner
+    container_name: aml_client
+    depends_on:
+      - aml-runner
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    command: tail -f /dev/null
+    tty: true
+    stdin_open: true

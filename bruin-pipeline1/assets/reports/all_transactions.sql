@@ -1,14 +1,19 @@
 /* @bruin
-name: aml_bq.all_transactions
+name: Reports.all_transactions
 type: bq.sql
+materialization: table
 depends:
-  - aml_bq.stg_small_trans
-  - aml_bq.stg_small_attacks
-  - aml_bq.ref_small_attack_patterns
+  - Staging.stg_small_trans
+  - Staging.stg_small_attacks
+  - Ingestion.ref_small_attack_patterns
 @bruin */
 
--- This view joins the normalized tables to create the final Dashboard source
-CREATE OR REPLACE VIEW `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.all_transactions` AS
+-- Partitioning by month limits the amount of data scanned by Looker Studio filters
+-- Clustering (presorting) by Timestamp and Account groups related transaction nodes together
+CREATE OR REPLACE TABLE `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.all_transactions`
+PARTITION BY TIMESTAMP_TRUNC(Timestamp, MONTH)
+CLUSTER BY Timestamp, Account
+AS
 SELECT 
     t.Timestamp,
     t.From_Bank,
@@ -24,18 +29,18 @@ SELECT
     t.transaction_id,
     t.risk_type,
     t.dataset_size,
-    -- Pulling descriptive info from the Attacks table
+    -- Descriptive info from the Staging Attacks table
     a.pattern_name,
     a.attack_details,
-    -- Pulling the manual description from the Patterns reference table
+    -- Manual description from the Ingestion reference table
     p.pattern_description,
-    -- Business Logic
+    -- Risk status logic
     CASE 
         WHEN t.Is_Laundering = 1 THEN 'High Alert'
         ELSE 'Normal'
     END as status
-FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE | lower }}_trans` t
-LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.stg_{{ var.DATASET_SIZE }}_attacks` a
+FROM `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.Staging.stg_{{ var.DATASET_SIZE | lower }}_trans` t
+LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.Staging.stg_{{ var.DATASET_SIZE | lower }}_attacks` a
   ON t.attack_id = a.attack_id
-LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.ref_{{ var.DATASET_SIZE }}_attack_patterns` p
+LEFT JOIN `{{ var.GCP_PROJECT_ID }}.{{ var.BQ_DATASET }}.Ingestion.ref_{{ var.DATASET_SIZE | lower }}_attack_patterns` p
   ON a.pattern_name = p.pattern_name;

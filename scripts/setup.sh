@@ -164,5 +164,3 @@ variables:
 EOF
 
 echo "[v] bruin-pipeline1/pipeline.yml updated!"
-
-echo "[>] Run 'make infra' next to build your architecture."
