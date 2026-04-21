@@ -8,7 +8,7 @@ materialization:
 depends:
   - staging.stg_small_trans
   - staging.stg_small_attacks
-  - ingestion.ref_small_attack_patterns
+  - staging.ref_small_attack_patterns
 @bruin */
 
 -- Bruin handles the CREATE TABLE logic automatically. 
