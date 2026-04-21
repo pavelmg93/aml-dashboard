@@ -45,7 +45,7 @@ pipeline:
 dashboard:
 	@echo "[/] Launching AML Dashboard..."
 	@echo "Live Dashboard Link:"
-	@echo "https://datastudio.google.com/reporting/78f521cd-3007-4151-9cd3-fe4a107d4e8c/page/VdnvF"
+	@echo "https://datastudio.google.com/u/1/reporting/78f521cd-3007-4151-9cd3-fe4a107d4e8c/page/VdnvF"
 
 clean:
 	@echo "[!] Destroying GCP Infrastructure..."
