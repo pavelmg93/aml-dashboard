@@ -37,4 +37,5 @@ resource "google_storage_bucket" "terraform_bucket" {
 resource "google_bigquery_dataset" "terraform_dataset" {
   dataset_id = var.bq_dataset_name
   location   = var.location
+  delete_contents_on_destroy = true
 }
