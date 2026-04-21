@@ -165,15 +165,14 @@ EOF
 
 echo "[v] bruin-pipeline1/pipeline.yml updated!"
 
-[/] Hardcoding dataset names into Bruin headers for validation...
+echo "[/] Hardcoding dataset names into Bruin headers for validation..."
 
-# This finds the 'name:' and 'depends:' lines in all .sql files
-# and prepends the actual dataset name.
-find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/name: /name: $BQ_DATASET_NAME./g" {} +
-find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/- / - $BQ_DATASET_NAME./g" {} +
+# Prepend the dataset name to 'name:' and 'depends:' fields
+# This uses $DATASET to match the variable used in your pipeline.yml
+find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/name: /name: $DATASET./g" {} +
+find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/- / - $DATASET./g" {} +
 
-# Note: We use a double check to ensure we don't double-prepend 
-# if the script is run twice.
-find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/$BQ_DATASET_NAME\.$BQ_DATASET_NAME\./$BQ_DATASET_NAME\./g" {} +
+# Clean up any double-prepends if script is run multiple times
+find bruin-pipeline1/assets -name "*.sql" -exec sed -i "s/$DATASET\.$DATASET\./$DATASET\./g" {} +
 
-[v] Bruin headers synchronized with BigQuery!
+echo "[v] Bruin headers synchronized with BigQuery!"
