@@ -45,14 +45,15 @@ pipeline:
 dashboard:
 	@echo ""
 	@echo "============================================================"
-	@echo "           AML DASHBOARD: ONE-CLICK SETUP               "
+	@echo "           AML DASHBOARD: ONE-CLICK SETUP                   "
 	@echo "============================================================"
-	@echo "[/] CLICK THIS LINK TO GENERATE YOUR PRIVATE DASHBOARD:"
-	@echo "    https://lookerstudio.google.com/reporting/create?c.reportId=78f521cd-3007-4151-9cd3-fe4a107d4e8c&ds.ds0.connector=bigQuery&ds.ds0.type=TABLE&ds.ds0.projectId=$(GCP_PROJECT_ID)&ds.ds0.datasetId=$(BQ_DATASET)&ds.ds0.tableId=all_transactions"
+	@echo "[!] CRITICAL AUTHENTICATION STEP:"
+	@echo "    Copy and paste the link below into a browser window"
+	@echo "    logged into the SAME Google account as your GCP Project."
+	@echo "    (Do not just Ctrl+Click if you use multiple Chrome profiles!)"
 	@echo ""
-	@echo "[!] INSTRUCTIONS:"
-	@echo "    1. The link above now includes the required 'TABLE' type parameter."
-	@echo "    2. Click 'CREATE REPORT' -> 'ADD TO REPORT'."
+	@echo "[/] CLICK THIS LINK TO GENERATE YOUR PRIVATE DASHBOARD:"
+	@echo "    https://lookerstudio.google.com/reporting/create?c.reportId=78f521cd-3007-4151-9cd3-fe4a107d4e8c&ds.ds0.connector=bigQuery&ds.ds0.type=TABLE&ds.ds0.projectId=$(GCP_PROJECT_ID)&ds.ds0.datasetId=$(BQ_DATASET)&ds.ds0.tableId=all_transactions&ds.ds0.billingProjectId=$(GCP_PROJECT_ID)"
 	@echo "============================================================"
 
 clean:

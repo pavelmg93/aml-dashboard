@@ -285,6 +285,8 @@ Ensure you have your Google Cloud Service Account key in the `keys/` folder and 
 5. **Finalize:** * Click **Create Report** in the top right.
     * Click **Add to Report** to authorize the BigQuery connector.
     * Your forensic data will populate immediately.
+> [!IMPORTANT]
+> **Authentication Note:** If you use multiple Google Accounts/Chrome Profiles, do not click the link directly from your terminal. Instead, **copy and paste the URL** into a browser tab where you are already logged into the Google Cloud Console. Looker Studio must be able to "see" your BigQuery tables using your current session.
 
 | Command | Description |
 | :--- | :--- |
