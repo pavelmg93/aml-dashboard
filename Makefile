@@ -45,17 +45,15 @@ pipeline:
 dashboard:
 	@echo ""
 	@echo "============================================================"
-	@echo "           🚀 AML DASHBOARD: ONE-CLICK SETUP               "
+	@echo "           AML DASHBOARD: ONE-CLICK SETUP               "
 	@echo "============================================================"
 	@echo "[/] CLICK THIS LINK TO GENERATE YOUR PRIVATE DASHBOARD:"
-	@echo "    https://lookerstudio.google.com/reporting/create?c.reportId=78f521cd-3007-4151-9cd3-fe4a107d4e8c&ds.ds0.connector=bigQuery&ds.ds0.projectId=$(GCP_PROJECT_ID)&ds.ds0.datasetId=$(BQ_DATASET)&ds.ds0.tableId=all_transactions"
+	@echo "    https://lookerstudio.google.com/reporting/create?c.reportId=78f521cd-3007-4151-9cd3-fe4a107d4e8c&ds.ds0.connector=bigQuery&ds.ds0.type=TABLE&ds.ds0.projectId=$(GCP_PROJECT_ID)&ds.ds0.datasetId=$(BQ_DATASET)&ds.ds0.tableId=all_transactions"
 	@echo ""
 	@echo "[!] INSTRUCTIONS:"
-	@echo "    1. The link above pre-fills your BQ settings."
-	@echo "    2. Click 'CREATE REPORT' in the top right."
-	@echo "    3. Click 'ADD TO REPORT' when prompted."
+	@echo "    1. The link above now includes the required 'TABLE' type parameter."
+	@echo "    2. Click 'CREATE REPORT' -> 'ADD TO REPORT'."
 	@echo "============================================================"
-	@echo "[v] Dashboard is now wired to: $(GCP_PROJECT_ID).$(BQ_DATASET)"
 
 clean:
 	@echo "[!] Destroying GCP Infrastructure..."
