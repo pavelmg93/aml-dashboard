@@ -1,6 +1,0 @@
-export GOOGLE_APPLICATION_CREDENTIALS="/home/pavel/dev_projects/aml-dashboard/keys/aml-dash-8888-997342dff4de.json"
-export BRUIN_GCP_KEY="./keys/aml-dash-8888-997342dff4de.json"
-export GCP_PROJECT_ID='aml-dash-8888'
-export GCP_BUCKET='aml_pmg_bucket'
-export BQ_DATASET='aml_bq'
-export KAGGLE_API_TOKEN='KGAT_f68476c4a624f41de873b2aa4d271cf3'
