@@ -45,21 +45,17 @@ pipeline:
 dashboard:
 	@echo ""
 	@echo "============================================================"
-	@echo "           AML DASHBOARD SETUP INSTRUCTIONS             "
+	@echo "           🚀 AML DASHBOARD: ONE-CLICK SETUP               "
 	@echo "============================================================"
-	@echo "[/] 1. OPEN TEMPLATE:"
-	@echo "    https://datastudio.google.com/reporting/78f521cd-3007-4151-9cd3-fe4a107d4e8c/page/VdnvF"
+	@echo "[/] CLICK THIS LINK TO GENERATE YOUR PRIVATE DASHBOARD:"
+	@echo "    https://lookerstudio.google.com/reporting/create?c.reportId=78f521cd-3007-4151-9cd3-fe4a107d4e8c&ds.ds0.connector=bigQuery&ds.ds0.projectId=$(GCP_PROJECT_ID)&ds.ds0.datasetId=$(BQ_DATASET)&ds.ds0.tableId=all_transactions"
 	@echo ""
-	@echo "[/] 2. COPY THE REPORT:"
-	@echo "    Click the (⋮) menu in the top right -> Select 'Make a copy'."
-	@echo ""
-	@echo "[/] 3. CONNECT YOUR BIGQUERY DATA:"
-	@echo "    In the 'New Data Source' dropdown, select 'Create data source'."
-	@echo "    Choose 'BigQuery' -> Select your Project -> $(BQ_DATASET) -> 'all_transactions'."
-	@echo "    Click 'Connect' -> 'Add to Report' -> 'Copy Report'."
+	@echo "[!] INSTRUCTIONS:"
+	@echo "    1. The link above pre-fills your BQ settings."
+	@echo "    2. Click 'CREATE REPORT' in the top right."
+	@echo "    3. Click 'ADD TO REPORT' when prompted."
 	@echo "============================================================"
-	@echo "[v] Dashboard is now wired to your specific GCP environment."
-	@echo "[>] Run 'make clean' to delete data and destroy infrastructure."
+	@echo "[v] Dashboard is now wired to: $(GCP_PROJECT_ID).$(BQ_DATASET)"
 
 clean:
 	@echo "[!] Destroying GCP Infrastructure..."
@@ -95,7 +91,7 @@ dc-pipeline:
 	docker compose exec aml-runner make pipeline
 
 dc-dashboard:
-	@echo "[/] Fetching Dashboard instructions from client..."
+	@echo "[/] Fetching custom Dashboard link from client..."
 	@docker compose exec aml-client make dashboard
 	@echo ""
 	@echo "[>] Run 'make dc-down' to stop containers."

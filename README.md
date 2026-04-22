@@ -247,28 +247,51 @@ My ETL identifies 8 distinct criminal typologies:
 The `dc-go` command is the recommended interactive way to walk through the ETL. I built this to automate the sequence.
 Ensure you have your Google Cloud Service Account key in the `keys/` folder and your Kaggle API credentials ready.
 
+## 📊 One-Click Dashboard Deployment
+
+I have implemented the **Looker Studio Linking API** to automate the connection between your BigQuery environment and the visualization layer.
+
+### Dockerized Deployment Steps
+1. **Run the Pipeline:** Ensure `make dc-go` has finished successfully.
+2. **Generate Your Link:** Run `make dc-dashboard` in your terminal.
+3. **Automated Handshake:** Click the generated custom link. 
+    * This URL automatically carries your `GCP_PROJECT_ID` and `BQ_DATASET` metadata to Looker Studio.
+4. **Finalize:** * Click **Create Report** in the top right.
+    * Click **Add to Report** to authorize the BigQuery connector.
+    * Your forensic data will populate immediately.
+
+
 | Command | Description |
 | :--- | :--- |
 | make dc-go | Chained command: Starts services and executes setup, infra, and ETL pipeline. |
 | make dc-build | Builds the Runner and Client images. |
 | make dc-setup | Interactive configuration of GCP and Kaggle credentials inside Docker. |
-| make dc-dashboard | Fetches the live dashboard URL from the Client container. |
+| make dc-dashboard | Fetches the custom live dashboard URL from the Client container. |
 | make dc-down | Stops services and cleans up local Docker volumes. |
 | make dc-clean | Deep clean: Purges Docker artifacts and destroys cloud resources. |
 
 ---
 
-## Local Development Guide
+## Local Deployment Guide
 
 If you prefer to run the pipeline directly on your host machine rather than via Docker, follow this sequence.
 Ensure you have your Google Cloud Service Account key in the `keys/` folder and your Kaggle API credentials ready.
+
+1. **Setup:** Ensure `make setup` and `make infra` have finished successfully.
+2. **Run Pipeline** Run `make pipeline` for end-to-end ELT pipeline run.
+3. **Generate Your Link:** Run `make dashboard` in your terminal.
+4. **Automated Handshake:** Click the generated custom link. 
+    * This URL automatically carries your `GCP_PROJECT_ID` and `BQ_DATASET` metadata to Looker Studio.
+5. **Finalize:** * Click **Create Report** in the top right.
+    * Click **Add to Report** to authorize the BigQuery connector.
+    * Your forensic data will populate immediately.
 
 | Command | Description |
 | :--- | :--- |
 | make setup | This interactive command installs the necessary tools (uv, Terraform, Bruin), creates your `.env` file, and sets up Python. |
 | make infra | Deploy the required Google Cloud Storage buckets and BigQuery datasets using Terraform.
 | make pipeline | Run the full ETL process (Ingestion -> Staging -> Reports) using the Bruin orchestrator.
-| make dashboard | Fetch the Looker Studio template link and follow the instructions to connect it to your BQ dataset. |
+| make dashboard | Fetch the Looker Studio custom link that auto connecta to your BQ dataset. |
 | make clean | To avoid ongoing cloud costs, destroy all provisioned GCP resources when finished. |
 
 ---
